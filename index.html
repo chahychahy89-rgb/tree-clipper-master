@@ -1,63 +1,11 @@
-function move(side) {
-        if (losses >= 5) { showAd(); return; }
-        
-        playerSide = side;
-        player.className = side === 0 ? 'player-left' : 'player-right';
+function showAd() {
+            AdController.show().then(() => {
+                losses = 0;
+                document.getElementById('losses-count').innerText = "0";
+            }).catch(() => { alert("شاهد الإعلان للمتابعة!"); });
+        }
 
-        // أنيميشن القطع على الجذع السفلي
-        const bottomTrunk = document.getElementById('trunk-0');
-        bottomTrunk.classList.add(side === 0 ? 'animate-cut-right' : 'animate-cut-left');
-
-        setTimeout(() => {
-            if ((side === 0 && branches[0] === 1) || (side === 1 && branches[0] === 2)) {
-                gameOver();
-            } else {
-                score++;
-                document.getElementById('score').innerText = score;
-                // تحريك الشجرة للأمام (أسفل)
-                branches.shift();
-                // إضافة غصن جديد عشوائي مع تجنب تكرار جهة الغصن لـ 3 مرات متتالية
-                let lastBranch = branches[branches.length-1];
-                let secondLast = branches[branches.length-2];
-                let next;
-                if (Math.random() > 0.6) {
-                    next = (Math.random() > 0.5) ? 1 : 2;
-                    if (next === lastBranch && next === secondLast) next = 0;
-                } else { next = 0; }
-                branches.push(next);
-                renderTree();
-            }
-        }, 150); // وقت الأنيميشن قبل التحقق من الخسارة
-    }
-
-    function gameOver() {
-        losses++;
-        lossesCount.innerText = losses;
-        tg.HapticFeedback.notificationOccurred('error');
-        player.innerHTML = '💥';
-        setTimeout(() => {
-            player.innerHTML = '🪓';
-            branches = [0, 0, 0, 0, 0, 0]; // إعادة تعيين الشجرة
-            renderTree();
-            if (losses >= 5) { showAd(); }
-        }, 800);
-    }
-
-    function showAd() {
-        player.innerHTML = '📺';
-        AdController.show().then(() => {
-            losses = 0;
-            lossesCount.innerText = "0";
-            player.innerHTML = '🪓';
-            score = 0;
-            document.getElementById('score').innerText = "0";
-        }).catch(() => {
-            lossesCount.innerText = "5 (اكمل الإعلان!)";
-            player.innerHTML = '⚠️';
-        });
-    }
-
-    renderTree();
-</script>
+        renderTree();
+    </script>
 </body>
 </html>
