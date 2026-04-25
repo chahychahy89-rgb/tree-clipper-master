@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binasou😎 Group Game</title>
+    <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #1a1a1a; color: white; padding: 20px; }
+        .btn { background: #2481cc; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; font-size: 18px; margin: 10px; }
+        .stats { margin: 20px; font-size: 20px; }
+        .ads-msg { color: #ffcc00; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Binasou😎 Group Game</h1>
+    <div class="stats">
+        الخسارات: <span id="lossCount">0</span>/5 <br>
+        النقاط: <span id="score">0</span>
+    </div>
+
+    <div id="game-area">
+        <p>اضغط لتقطيع الشجرة!</p>
+        <button class="btn" onclick="playGame()">قطع 🪓</button>
+    </div>
+
+    <hr>
+    <button class="btn" style="background: #28a745;" onclick="inviteFriend()">➕ دعوة صديق لكسب النقاط</button>
+
+    <script>
+        let losses = 0;
+        let score = 0;
+        // ضع هنا رقمك (Block ID) من AdsGram
+        const AdController = window.Adsgram.init({ blockId: "YOUR_ADSGRAM_BLOCK_ID_HERE" });
+
+        function playGame() {
+            // محاكاة احتمالية خسارة (20% خسارة في كل ضغطة)
+            if (Math.random() < 0.2) {
+                losses++;
+                document.getElementById('lossCount').innerText = losses;
+                alert("أوه! خبطت في الغصن ❌");
+                
+                if (losses >= 5) {
+                    showAd();
+                }
+            } else {
+                score += 10;
+                document.getElementById('score').innerText = score;
+            }
+        }
+
+        async function showAd() {
+            alert("وصلت لـ 5 خسارات! شاهد إعلان لإعادة تعيين المحاولات.");
+            
+            AdController.show().then((result) => {
+                // عند نجاح مشاهدة الإعلان
+                alert("شكراً للمشاهدة! تم تصفير الخسارات.");
+                losses = 0;
+                document.getElementById('lossCount').innerText = losses;
+            }).catch((result) => {
+                // إذا فشل الإعلان أو تم إغلاقه
+                alert("يجب مشاهدة الإعلان كاملاً لتستمر في اللعب!");
+            });
+        }
+
+        function inviteFriend() {
+            const botLink = "https://t.me/YOUR_BOT_USERNAME?start=ref_" + Math.floor(Math.random() * 1000);
+            const shareText = encodeURIComponent("تعال العب معي في بوت binasou😎 group واربح نقاط!");
+            window.open(https://t.me/share/url?url=${botLink}&text=${shareText});
+        }
+    </script>
+</body>
+</html>
