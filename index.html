@@ -1,9 +1,66 @@
-function showAd() {
+const b = document.createElement('div'); b.className = 'branch left'; trunk.appendChild(b);
+                } else if (branches[i] === 2) {
+                    const b = document.createElement('div'); b.className = 'branch right'; trunk.appendChild(b);
+                }
+                treePath.appendChild(trunk);
+            }
+        }
+
+        function move(side) {
+            if (losses >= 5) { showAd(); return; }
+            
+            const p = document.getElementById('player');
+            p.className = side === 0 ? 'player-left' : 'player-right';
+            
+            // تأثير حركة القطع
+            p.classList.add('chopping');
+            setTimeout(() => p.classList.remove('chopping'), 50);
+
+            if ((side === 0 && branches[0] === 1) || (side === 1 && branches[0] === 2)) {
+                gameOver("آخ! ضربك الغصن 🪵");
+            } else {
+                score++;
+                timeLeft = Math.min(timeLeft + 2, 100); // زيادة الوقت قليلاً عند كل ضربة
+                document.getElementById('score').innerText = score;
+                if(score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('lumber_hi', highScore);
+                    document.getElementById('hi-val').innerText = highScore;
+                }
+                branches.shift();
+                branches.push(Math.random() > 0.65 ? (Math.random() > 0.5 ? 1 : 2) : 0);
+            }
+            renderTree();
+        }
+
+        function gameOver(msg) {
+            losses++;
+            document.getElementById('losses-count').innerText = losses;
+            alert(msg);
+            score = 0;
+            timeLeft = 100;
+            document.getElementById('score').innerText = "0";
+            branches = [0, 0, 0, 0, 0, 0];
+            if (losses >= 5) showAd();
+        }
+
+        function showAd() {
             AdController.show().then(() => {
                 losses = 0;
                 document.getElementById('losses-count').innerText = "0";
-            }).catch(() => { alert("شاهد الإعلان للمتابعة!"); });
+            }).catch(() => { 
+                alert("برجاء دعمنا بمشاهدة الإعلان للمتابعة!"); 
+            });
         }
+
+        // نظام الوقت (اختياري - يمكنك حذفه إذا كنت تريد اللعبة هادئة)
+        setInterval(() => {
+            if (score > 0) {
+                timeLeft -= 1.5;
+                document.getElementById('timer-bar').style.width = timeLeft + "%";
+                if (timeLeft <= 0) gameOver("انتهى الوقت! أسرع في المرة القادمة ⏳");
+            }
+        }, 100);
 
         renderTree();
     </script>
